@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.2 (2026-06-19)
+
+## What's Changed
+* docs(readme): split root README into marketplace overview + per-plugin docs by @jessegonzalez in https://github.com/jessegonzalez/skills/pull/14
+
+
+**Full Changelog**: https://github.com/jessegonzalez/skills/compare/argo-rollouts-v1.2.1...argo-rollouts-v1.2.2
+
 ## 1.2.1 (2026-06-19)
 
 ## What's Changed

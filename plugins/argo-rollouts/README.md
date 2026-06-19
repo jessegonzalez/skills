@@ -1,6 +1,6 @@
 # argo-rollouts
 
-**Version:** v1.2.1 <!-- x-release-please-version -->
+**Version:** v1.2.2 <!-- x-release-please-version -->
 
 A skill — in the [agentskills.io](https://agentskills.io/specification.md)
 format — that helps agents and humans **author, operate, and troubleshoot
