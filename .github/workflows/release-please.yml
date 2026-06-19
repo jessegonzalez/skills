@@ -3,7 +3,9 @@ name: Release
 # release-please maintains CHANGELOG.md, bumps the version, and cuts tags
 # from Conventional Commits (already enforced by githooks/commit-msg).
 # It keeps a running "release PR"; merging that PR publishes the new version.
-# Versions also bump in the marketplace manifest + skill metadata via extra-files.
+# Manifest mode (release-please-config.json + .release-please-manifest.json)
+# bumps version across the marketplace catalog (nested jsonpath), plugin
+# manifest, and SKILL.md (generic `x-release-please-version` marker).
 
 on:
   push:
@@ -19,12 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         with:
-          release-type: simple
-          package-name: skills
-          include-component-in-tag: false
-          changelog-type: github
-          extra-files: |
-            .claude-plugin/marketplace.json
-            plugins/argo-rollouts/skills/argo-rollouts/SKILL.md
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
