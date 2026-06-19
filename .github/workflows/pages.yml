@@ -37,8 +37,15 @@ jobs:
           python3 - <<'PY'
           import json, pathlib
           m = json.loads(pathlib.Path(".claude-plugin/marketplace.json").read_text())
+          root = pathlib.Path(m.get("metadata", {}).get("pluginRoot", "./plugins"))
+          def plugin_ver(p):
+              pj = root / p["source"] / ".claude-plugin" / "plugin.json"
+              try:
+                  return json.loads(pj.read_text()).get("version", "")
+              except FileNotFoundError:
+                  return ""
           plugins = "".join(
-              f'<li><b>{p["name"]}</b> — {p.get("description","")} <code>v{p.get("version","")}</code></li>'
+              f'<li><b>{p["name"]}</b> — {p.get("description","")} <code>v{plugin_ver(p)}</code></li>'
               for p in m.get("plugins", [])
           )
           pathlib.Path("_site/index.html").write_text(f"""<!doctype html>
