@@ -44,7 +44,7 @@ They're all enforced by CI but please internalise them:
 2. **New scripts need tests.** Every CLI behaviour change in
    `plugins/argo-rollouts/skills/argo-rollouts/scripts/` ships with new or updated tests in
    `plugins/argo-rollouts/skills/argo-rollouts/tests/`. CI fails without it (the test count is currently
-   55 — your change should bump it).
+   61 — your change should bump it).
 
 3. **New references must be linked from `SKILL.md`.** A reference doc that
    no one navigates to is dead weight. Add a row to the routing table at the
@@ -108,7 +108,8 @@ python3 .github/scripts/validate_skill.py plugins/argo-rollouts/skills/argo-roll
 # smoke:
 uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py --name guestbook --image guestbook:v2 \
   --replicas 4 --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
-  --traffic-routing istio --virtual-service guestbook-vsvc --routes primary \
+  --traffic-routing alb --ingress guestbook-ingress --service-port 443 \
+  --root-service guestbook-root --ping-pong \
   --stable-service guestbook-stable --canary-service guestbook-canary \
   --analysis-template success-rate --starting-step 2 > /tmp/r.yaml
 uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_analysis.py --name success-rate --provider prometheus \

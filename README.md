@@ -23,7 +23,7 @@ The repository distributes the skill. The skill itself lives in
   [`gen_analysis.py`](./plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_analysis.py),
   [`validate.py`](./plugins/argo-rollouts/skills/argo-rollouts/scripts/validate.py). See
   [`scripts/README.md`](./plugins/argo-rollouts/skills/argo-rollouts/scripts/README.md).
-- **[`tests/`](./plugins/argo-rollouts/skills/argo-rollouts/tests)** — 55 pytest tests covering all three
+- **[`tests/`](./plugins/argo-rollouts/skills/argo-rollouts/tests)** — 61 pytest tests covering all three
   CLIs.
 
 > **Field paths in this skill are verified against `argoproj.io/v1alpha1`.**
@@ -74,12 +74,12 @@ instructions.
 ## Usage
 
 ```bash
-# Generate a canary Rollout with Istio traffic routing + an AnalysisTemplate gate
+# Generate a canary Rollout with AWS ALB traffic routing + ping-pong + an AnalysisTemplate gate
 uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py \
   --name guestbook --image guestbook:v2 --replicas 4 \
   --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
-  --traffic-routing istio \
-  --virtual-service guestbook-vsvc --routes primary \
+  --traffic-routing alb --ingress guestbook-ingress --service-port 443 \
+  --root-service guestbook-root --ping-pong \
   --stable-service guestbook-stable --canary-service guestbook-canary \
   --analysis-template success-rate --starting-step 2 > rollout.yaml
 
@@ -122,7 +122,7 @@ jobs on every push to `main` and every PR against `main`:
 | Job          | What it checks                                           |
 |--------------|----------------------------------------------------------|
 | `test`       | `pytest plugins/argo-rollouts/skills/argo-rollouts/tests` under Python 3.14 via `uv`. |
-| `lint`       | `ruff check argo-rollouts`.                              |
+| `lint`       | `ruff check plugins/argo-rollouts/skills/argo-rollouts`. |
 | `skill-spec` | `SKILL.md` conforms to the agentskills.io spec.          |
 | `smoke`      | The `gen_*` → `validate` pipeline produces valid output. |
 
