@@ -1,11 +1,20 @@
 {
   "name": "argo-rollouts",
   "description": "Author, operate, and troubleshoot Argo Rollouts: canary and blue-green strategies, AnalysisTemplate metric gates, traffic routing (AWS ALB ping-pong, NGINX, SMI, Istio), the kubectl argo rollouts plugin, GitOps with Argo CD, plus PEP 723 self-contained manifest generators.",
-  "version": "1.2.0",
-  "author": { "name": "Jesse Gonzalez" },
+  "version": "1.2.1",
+  "author": {
+    "name": "Jesse Gonzalez"
+  },
   "homepage": "https://github.com/jessegonzalez/skills",
   "repository": "https://github.com/jessegonzalez/skills",
   "license": "MIT",
-  "keywords": ["argo-rollouts", "kubernetes", "progressive-delivery", "canary", "blue-green", "agentskills"],
+  "keywords": [
+    "argo-rollouts",
+    "kubernetes",
+    "progressive-delivery",
+    "canary",
+    "blue-green",
+    "agentskills"
+  ],
   "category": "kubernetes"
 }
