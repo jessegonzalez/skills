@@ -119,6 +119,50 @@ def test_canary_routes_parses_comma_list():
 
 
 # ---------------------------------------------------------------------------
+# AWS ALB traffic routing + ping-pong
+# ---------------------------------------------------------------------------
+
+
+def test_canary_with_alb_traffic_routing():
+    doc = build_rollout(
+        name="app",
+        image="img",
+        strategy="canary",
+        traffic_routing="alb",
+        stable_service="app-stable",
+        canary_service="app-canary",
+        ingress="app-ingress",
+        service_port=443,
+    )
+    canary = doc["spec"]["strategy"]["canary"]
+    assert canary["canaryService"] == "app-canary"
+    assert canary["stableService"] == "app-stable"
+    alb = canary["trafficRouting"]["alb"]
+    assert alb["ingress"] == "app-ingress"
+    assert alb["servicePort"] == 443
+    assert "rootService" not in alb
+    assert "pingPong" not in canary
+
+
+def test_canary_alb_ping_pong():
+    doc = build_rollout(
+        name="app",
+        image="img",
+        strategy="canary",
+        traffic_routing="alb",
+        stable_service="app-stable",
+        canary_service="app-canary",
+        ingress="app-ingress",
+        service_port=443,
+        root_service="app-root",
+        ping_pong=True,
+    )
+    canary = doc["spec"]["strategy"]["canary"]
+    assert canary["trafficRouting"]["alb"]["rootService"] == "app-root"
+    assert canary["pingPong"] == {}
+
+
+# ---------------------------------------------------------------------------
 # Background analysis
 # ---------------------------------------------------------------------------
 
@@ -203,6 +247,49 @@ def test_error_istio_without_canary_service():
             traffic_routing="istio",
             stable_service="s",
             virtual_service="vs",
+        )
+
+
+def test_error_alb_without_ingress():
+    with pytest.raises(ValueError, match="ingress"):
+        build_rollout(
+            name="app",
+            image="img",
+            traffic_routing="alb",
+            stable_service="s",
+            canary_service="c",
+            service_port=443,
+        )
+
+
+def test_error_alb_without_service_port():
+    with pytest.raises(ValueError, match="service-port"):
+        build_rollout(
+            name="app",
+            image="img",
+            traffic_routing="alb",
+            stable_service="s",
+            canary_service="c",
+            ingress="ing",
+        )
+
+
+def test_error_ping_pong_requires_traffic_routing():
+    with pytest.raises(ValueError, match="ping-pong requires"):
+        build_rollout(name="app", image="img", strategy="canary", ping_pong=True)
+
+
+def test_error_ping_pong_alb_requires_root_service():
+    with pytest.raises(ValueError, match="root-service"):
+        build_rollout(
+            name="app",
+            image="img",
+            traffic_routing="alb",
+            stable_service="s",
+            canary_service="c",
+            ingress="ing",
+            service_port=443,
+            ping_pong=True,
         )
 
 

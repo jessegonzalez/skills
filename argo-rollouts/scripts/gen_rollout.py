@@ -42,6 +42,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--preview-service", dest="preview_service", help="Preview Service name (bluegreen only, optional).")
     p.add_argument("--virtual-service", dest="virtual_service", help="Istio VirtualService name (required when --traffic-routing=istio).")
     p.add_argument("--routes", help="Comma-separated Istio VirtualService route names, e.g. 'primary' or 'r1,r2'.")
+    p.add_argument("--ingress", help="ALB-managed Ingress name (required when --traffic-routing=alb).")
+    p.add_argument("--service-port", dest="service_port", help="Service port the ALB targets, e.g. 443 (required when --traffic-routing=alb).")
+    p.add_argument("--root-service", dest="root_service", help="ALB root service (required for --ping-pong with --traffic-routing=alb).")
+    p.add_argument("--annotation-prefix", dest="annotation_prefix", help="ALB annotation prefix override (default set by controller).")
+    p.add_argument("--ping-pong", action="store_true", dest="ping_pong", help="Enable ping-pong (zero-downtime for long-lived connections); requires --traffic-routing.")
     p.add_argument("--analysis-template", dest="analysis_template", help="Background AnalysisTemplate name to gate the canary.")
     p.add_argument("--starting-step", type=int, dest="starting_step", help="canary.analysis.startingStep (delay background analysis until this step index).")
     p.add_argument("--manual-gate", action="store_true", dest="manual_gate", help="Bluegreen: set autoPromotionEnabled=false (require kubectl promote).")
@@ -76,6 +81,11 @@ def main(argv: list[str] | None = None) -> int:
             manual_gate=args.manual_gate,
             max_surge=args.max_surge,
             max_unavailable=args.max_unavailable,
+            ingress=args.ingress,
+            service_port=args.service_port,
+            root_service=args.root_service,
+            annotation_prefix=args.annotation_prefix,
+            ping_pong=args.ping_pong,
         )
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)

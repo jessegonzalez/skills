@@ -198,6 +198,11 @@ def build_rollout(
     manual_gate: bool = False,
     max_surge: str | int | None = None,
     max_unavailable: str | int | None = None,
+    ingress: str | None = None,
+    service_port: str | int | None = None,
+    root_service: str | None = None,
+    annotation_prefix: str | None = None,
+    ping_pong: bool = False,
 ) -> dict:
     """Build an Argo Rollouts ``Rollout`` manifest as a dict.
 
@@ -240,6 +245,22 @@ def build_rollout(
             raise ValueError(
                 "--virtual-service is required when --traffic-routing=istio"
             )
+        if traffic_routing == "alb":
+            if not ingress:
+                raise ValueError(
+                    "--ingress is required when --traffic-routing=alb"
+                )
+            if service_port is None:
+                raise ValueError(
+                    "--service-port is required when --traffic-routing=alb"
+                )
+
+    if ping_pong and not use_traffic:
+        raise ValueError("--ping-pong requires --traffic-routing")
+    if ping_pong and traffic_routing == "alb" and not root_service:
+        raise ValueError(
+            "--root-service is required for --ping-pong with --traffic-routing=alb"
+        )
 
     if strategy == "bluegreen" and not active_service:
         raise ValueError("--active-service is required when --strategy=bluegreen")
@@ -275,8 +296,17 @@ def build_rollout(
             canary["canaryService"] = canary_service
             canary["stableService"] = stable_service
             canary["trafficRouting"] = _build_traffic_routing(
-                traffic_routing, virtual_service, routes
+                traffic_routing,
+                virtual_service,
+                routes,
+                ingress=ingress,
+                service_port=service_port,
+                root_service=root_service,
+                annotation_prefix=annotation_prefix,
             )
+
+        if ping_pong:
+            canary["pingPong"] = {}
 
         if max_surge is not None:
             canary["maxSurge"] = max_surge
@@ -332,6 +362,11 @@ def _build_traffic_routing(
     router: str,
     virtual_service: str | None,
     routes: Any,
+    *,
+    ingress: str | None = None,
+    service_port: str | int | None = None,
+    root_service: str | None = None,
+    annotation_prefix: str | None = None,
 ) -> dict:
     """Build the ``trafficRouting`` block for the selected router."""
     if router == "istio":
@@ -340,7 +375,14 @@ def _build_traffic_routing(
         if route_list:
             vs["routes"] = route_list
         return {"istio": {"virtualService": vs}}
-    # nginx / alb / smi take provider-specific extra config that we leave
+    if router == "alb":
+        alb: dict = {"ingress": ingress, "servicePort": service_port}
+        if root_service:
+            alb["rootService"] = root_service
+        if annotation_prefix:
+            alb["annotationPrefix"] = annotation_prefix
+        return {"alb": alb}
+    # nginx / smi take provider-specific extra config that we leave
     # for the user to hand-edit; emit an empty marker so the structure is
     # discoverable and the validator still sees that trafficRouting is set.
     return {router: {}}

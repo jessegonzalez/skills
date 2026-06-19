@@ -102,12 +102,13 @@ Hand-writing Rollout YAML is verbose and error-prone (wrong camelCase, missing `
 
 Paths in the commands below are relative to this skill directory. `uv run` is the zero-install path; if `uv` is unavailable, use `python3 scripts/...` with PyYAML installed.
 
-**Canary with a Prometheus gate and Istio traffic routing:**
+**Canary with a Prometheus gate, AWS ALB traffic routing, and ping-pong (zero-downtime):**
 ```bash
 uv run scripts/gen_rollout.py \
   --name guestbook --image guestbook:v2 --replicas 4 --port 8080 \
   --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
-  --traffic-routing istio --virtual-service guestbook-vsvc --routes primary \
+  --traffic-routing alb --ingress guestbook-ingress --service-port 443 \
+  --root-service guestbook-root --ping-pong \
   --stable-service guestbook-stable --canary-service guestbook-canary \
   --analysis-template success-rate --starting-step 2 \
   > rollout.yaml

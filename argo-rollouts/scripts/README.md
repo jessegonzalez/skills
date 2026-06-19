@@ -75,6 +75,11 @@ instead of dashes — `traffic_routing` not `traffic-routing`).
 | `--preview-service NAME` | str | *(none)* | Bluegreen only. |
 | `--virtual-service NAME` | str | *(none)* | Required when `--traffic-routing=istio`. |
 | `--routes r1,r2` | str | *(none)* | Comma-list of Istio VirtualService route names. |
+| `--ingress NAME` | str | *(none)* | Required when `--traffic-routing=alb` (the ALB-managed Ingress). |
+| `--service-port PORT` | int | *(none)* | Required when `--traffic-routing=alb` (port the ALB targets). |
+| `--root-service NAME` | str | *(none)* | ALB root service; required for `--ping-pong` with `alb`. |
+| `--annotation-prefix PFX` | str | *(none)* | ALB annotation prefix override. |
+| `--ping-pong` | flag | off | Enable `canary.pingPong` (zero-downtime for long-lived connections); requires `--traffic-routing`. |
 | `--analysis-template NAME` | str | *(none)* | Background AnalysisTemplate. |
 | `--starting-step N` | int | *(none)* | `canary.analysis.startingStep` (delay analysis until step index). |
 | `--manual-gate` | flag | off | Bluegreen: set `autoPromotionEnabled: false`. |
@@ -84,13 +89,14 @@ instead of dashes — `traffic_routing` not `traffic-routing`).
 
 ### Examples
 
-**Canary + Istio traffic routing + Prometheus gate** (matches SKILL.md):
+**Canary + AWS ALB traffic routing + ping-pong + Prometheus gate** (matches SKILL.md):
 
 ```bash
 .venv/bin/python argo-rollouts/scripts/gen_rollout.py \
   --name guestbook --image guestbook:v2 --replicas 4 --port 8080 \
   --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
-  --traffic-routing istio --virtual-service guestbook-vsvc --routes primary \
+  --traffic-routing alb --ingress guestbook-ingress --service-port 443 \
+  --root-service guestbook-root --ping-pong \
   --stable-service guestbook-stable --canary-service guestbook-canary \
   --analysis-template success-rate --starting-step 2 \
   > rollout.yaml
