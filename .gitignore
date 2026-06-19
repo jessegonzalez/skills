@@ -88,3 +88,8 @@ Thumbs.db
 /tmp/
 *.local.yaml
 *.local.yml
+
+# ─────────────────────────────────────────────────────────────
+# Eval run artifacts (raw transcripts; regenerate via evals/run_eval.py)
+# ─────────────────────────────────────────────────────────────
+argo-rollouts/evals/out/

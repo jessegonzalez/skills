@@ -1,0 +1,21 @@
+{
+  "skill_marker": "Skill \"argo-rollouts\"",
+  "prompts": [
+    {"id":"p01","trigger":true,"category":"canary-gen","prompt":"Create an Argo Rollouts canary Rollout for image api:v1, 4 replicas, shifting traffic 20/50/80 percent with 5 minute pauses between steps.","checks":[{"has":"argoproj.io/v1alpha1"},{"has":"kind: Rollout"},{"has":"canary"},{"has":"setWeight"}]},
+    {"id":"p02","trigger":true,"category":"bluegreen-gen","prompt":"Write a blue-green Argo Rollouts manifest with an active service, a preview service, and a manual promotion gate.","checks":[{"has":"blueGreen:"},{"has":"activeService"},{"lacks":"bluegreen:"}]},
+    {"id":"p03","trigger":true,"category":"traffic-routing","prompt":"Generate an Argo Rollouts canary Rollout using the AWS ALB ping-pong pattern for zero-downtime deployments, with stable+canary services and a root service.","checks":[{"has":"pingPong"},{"has":"alb"},{"has":"rootService"},{"has":"trafficRouting"},{"has":"canaryService"}]},
+    {"id":"p04","trigger":true,"category":"analysis-gen","prompt":"Write an AnalysisTemplate that queries Prometheus for the 5m success rate and aborts the rollout below 95%.","checks":[{"has":"AnalysisTemplate"},{"has":"prometheus"},{"has":"successCondition"}]},
+    {"id":"p05","trigger":true,"category":"convert","prompt":"Convert a standard apps/v1 Deployment (image api:v1, 4 replicas) into an Argo Rollout canary.","checks":[{"has":"kind: Rollout"},{"has":"argoproj.io/v1alpha1"}]},
+    {"id":"p06","trigger":true,"category":"troubleshoot","prompt":"My Argo rollout is stuck in Paused status and won't advance. How do I move it forward?","checks":[{"has":"promote"}]},
+    {"id":"p07","trigger":true,"category":"troubleshoot","prompt":"My canary traffic isn't shifting to the new version - it all still goes to stable. What do I check?","checks":[{"any":["canaryService","stableService","selector","trafficRouting"]}]},
+    {"id":"p08","trigger":true,"category":"ops","prompt":"How do I abort a bad Argo Rollouts deployment and get back to the previous version?","checks":[{"has":"abort"},{"any":["undo","stable","previous"]}]},
+    {"id":"p09","trigger":true,"category":"gitops","prompt":"With Argo CD for GitOps plus Argo Rollouts, will an abort cause an endless rollback loop with Argo CD?","checks":[{"any":["Git","fix-forward","fix forward","endless","loop"]}]},
+    {"id":"p10","trigger":true,"category":"hpa","prompt":"My canary has a memory leak and my HPA is scaling up the stable pods too. How do I stop the HPA fighting the canary?","checks":[{"any":["setCanaryScale","dynamicStableScale","trafficRouting","traffic routing"]}]},
+    {"id":"p11","trigger":false,"category":"near-miss","prompt":"Create a standard Kubernetes Deployment for nginx with rollingUpdate maxSurge 1 maxUnavailable 0.","checks":[{"lacks":"argoproj.io/v1alpha1"}]},
+    {"id":"p12","trigger":false,"category":"near-miss","prompt":"Write a Helm values.yaml for a web service: replicaCount, image, and service config.","checks":[{"lacks":"argoproj.io/v1alpha1"}]},
+    {"id":"p13","trigger":false,"category":"near-miss","prompt":"Create a HorizontalPodAutoscaler for my Deployment targeting 70% average CPU.","checks":[{"lacks":"argoproj.io/v1alpha1"}]},
+    {"id":"p14","trigger":false,"category":"near-miss","prompt":"Create a Kubernetes Service and an Ingress for an nginx deployment on port 80.","checks":[{"lacks":"argoproj.io/v1alpha1"}]},
+    {"id":"p15","trigger":false,"category":"near-miss","prompt":"Write a Dockerfile for a Python FastAPI app using uv and uvicorn.","checks":[{"lacks":"argoproj.io/v1alpha1"}]},
+    {"id":"p16","trigger":false,"category":"near-miss","prompt":"Create a ServiceAccount and a read-only ClusterRole plus binding for viewing pods.","checks":[{"lacks":"argoproj.io/v1alpha1"}]}
+  ]
+}
