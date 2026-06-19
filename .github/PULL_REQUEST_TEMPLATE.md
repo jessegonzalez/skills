@@ -36,7 +36,8 @@ python3 .github/scripts/validate_skill.py plugins/argo-rollouts/skills/argo-roll
 # 4. Smoke (generator → validator)
 uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py --name guestbook --image guestbook:v2 \
   --replicas 4 --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
-  --traffic-routing istio --virtual-service guestbook-vsvc --routes primary \
+  --traffic-routing alb --ingress guestbook-ingress --service-port 443 \
+  --root-service guestbook-root --ping-pong \
   --stable-service guestbook-stable --canary-service guestbook-canary \
   --analysis-template success-rate --starting-step 2 > /tmp/r.yaml
 uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_analysis.py --name success-rate --provider prometheus \
@@ -45,7 +46,7 @@ uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_analysis.py --name
 uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/validate.py /tmp/r.yaml /tmp/a.yaml    # must exit 0
 ```
 
-Results: <!-- e.g. "55 passed", "All checks passed!", "OK", "EXIT=0" -->
+Results: <!-- e.g. "61 passed", "All checks passed!", "OK", "EXIT=0" -->
 
 ## Spec-compliance checklist
 

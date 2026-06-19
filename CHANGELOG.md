@@ -20,6 +20,13 @@ maintains this file from Conventional Commits.
   as authority). All path references in CI, hooks, docs, the spec validator, the eval
   harness, CODEOWNERS, and Dependabot were updated.
 
+### Docs
+- Added `AGENTS.md` with the "docs travel with the change" rule and a
+  documentation touchpoint map, so doc updates stay in sync as the codebase
+  changes.
+- Synced stale docs to the AWS ALB ping-pong canonical example and the
+  current test count (55 -> 61).
+
 ## [1.1.0] - 2026-06-19
 
 ### Added
