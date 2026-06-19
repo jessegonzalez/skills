@@ -9,7 +9,8 @@
       "changelog-type": "github",
       "extra-files": [
         ".claude-plugin/plugin.json",
-        "skills/argo-rollouts/SKILL.md"
+        "skills/argo-rollouts/SKILL.md",
+        "README.md"
       ]
     }
   }
