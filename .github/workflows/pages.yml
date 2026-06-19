@@ -1,0 +1,77 @@
+name: Pages
+
+# Publishes the plugin marketplace catalog (`.claude-plugin/marketplace.json`)
+# plus a small landing page to GitHub Pages, so the marketplace is installable
+# via a stable URL as well as directly from the repo.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".claude-plugin/marketplace.json"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build site
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp .claude-plugin/marketplace.json _site/marketplace.json
+          python3 - <<'PY'
+          import json, pathlib
+          m = json.loads(pathlib.Path(".claude-plugin/marketplace.json").read_text())
+          plugins = "".join(
+              f'<li><b>{p["name"]}</b> — {p.get("description","")} <code>v{p.get("version","")}</code></li>'
+              for p in m.get("plugins", [])
+          )
+          pathlib.Path("_site/index.html").write_text(f"""<!doctype html>
+          <html lang="en"><head><meta charset="utf-8">
+          <title>{m['name']} — plugin marketplace</title>
+          <style>body{{font:15px/1.6 -apple-system,system-ui,sans-serif;max-width:760px;margin:3rem auto;padding:0 1rem;color:#222}}code,pre{{background:#f4f4f5;padding:.15em .4em;border-radius:4px}}pre{{padding:1rem;overflow:auto}}</style>
+          </head><body>
+          <h1>{m['name']}</h1>
+          <p>{m.get('description','')}</p>
+          <h2>Install</h2>
+          <pre>claude plugin marketplace add jessegonzalez/skills
+          claude plugin install {m['plugins'][0]['name']}@{m['name']}</pre>
+          <p>…or from this Pages URL:</p>
+          <pre>claude plugin marketplace add https://jessegonzalez.github.io/skills/marketplace.json</pre>
+          <h2>Plugins</h2><ul>{plugins}</ul>
+          <p><a href="marketplace.json">marketplace.json</a> · <a href="https://github.com/jessegonzalez/skills">source</a></p>
+          </body></html>""")
+          PY
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

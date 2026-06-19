@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Repository scaffolding: `.gitignore`, `.editorconfig`, Apache-2.0 `LICENSE`,
+- Repository scaffolding: `.gitignore`, `.editorconfig`, MIT `LICENSE`,
   `README.md`, `CONTRIBUTING.md`, `SECURITY.md`.
 - Version-controlled git hooks under `githooks/` (`pre-commit`, `commit-msg`)
   activated via `git config core.hooksPath githooks`.

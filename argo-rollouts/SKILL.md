@@ -1,7 +1,7 @@
 ---
 name: argo-rollouts
 description: Author, operate, and troubleshoot Argo Rollouts, the Kubernetes progressive delivery controller. Covers the Rollout CRD, canary and blue-green strategies, AnalysisTemplates with metric gates (Prometheus, Datadog, Wavefront, New Relic, CloudWatch, Graphite, InfluxDB, Kayenta, Job, Web), traffic routing via Istio, NGINX, SMI, AWS ALB, Traefik, Apisix, Gloo, Gateway API, experiments and A/B testing, the kubectl argo rollouts plugin, GitOps with Argo CD, and Slack/Teams notifications. Use whenever the user mentions progressive delivery, canary or blue-green deploys, weighted traffic shifting, metric-based promotion or auto-rollback, converting a Deployment to a Rollout, or says things like "promote/abort/undo the rollout" or "my canary isn't getting traffic" - even without naming Argo Rollouts.
-license: Apache-2.0
+license: MIT
 compatibility: Scripts are self-contained (PEP 723) and run via `uv run scripts/...` with zero install, or `python3 scripts/...` with PyYAML. Tests need pytest (see requirements.txt). Operates on Kubernetes clusters with the Argo Rollouts controller and the `kubectl argo rollouts` plugin.
 metadata:
   author: argo-rollouts-skill

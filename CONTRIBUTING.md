@@ -134,4 +134,4 @@ versioned heading on release.
 ## Licence
 
 By contributing you agree your contributions are licensed under
-[Apache-2.0](./LICENSE).
+[MIT](./LICENSE).

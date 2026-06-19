@@ -164,7 +164,7 @@ def validate(skill_path: Path) -> list[str]:
     # `license` is recommended and we want it for this repo
     lic = fm.get("license")
     if lic is None:
-        violations.append("frontmatter: `license` is recommended (this repo uses Apache-2.0)")
+        violations.append("frontmatter: `license` is recommended (this repo uses MIT)")
 
     # `compatibility` optional
     compat = fm.get("compatibility")

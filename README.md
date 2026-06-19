@@ -1,7 +1,7 @@
 # argo-rollouts skill
 
 [![CI](https://github.com/jessegonzalez/skills/actions/workflows/ci.yml/badge.svg)](https://github.com/jessegonzalez/skills/actions/workflows/ci.yml)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Spec: agentskills.io](https://img.shields.io/badge/spec-agentskills.io-8A2BE2)](https://agentskills.io/specification.md)
 
 A **Claude / agent Skill** — in the [agentskills.io](https://agentskills.io/specification.md)
@@ -114,5 +114,5 @@ All four must stay green.
 
 ## License
 
-[Apache-2.0](./LICENSE) — matching the skill's own `license: Apache-2.0`
-frontmatter. Copyright 2025 argo-rollouts-skill contributors.
+[MIT](./LICENSE) — matching the skill's own `license: MIT`
+frontmatter. Copyright 2026 Jesse Gonzalez.
