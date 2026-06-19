@@ -101,6 +101,7 @@ maintains this file from Conventional Commits.
   - `README.md` — CLI reference.
 - `tests/` — 55 pytest tests across all three CLIs.
 
-[Unreleased]: https://github.com/jessegonzalez/skills/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/jessegonzalez/skills/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/jessegonzalez/skills/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/jessegonzalez/skills/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/jessegonzalez/skills/releases/tag/v1.0.0
