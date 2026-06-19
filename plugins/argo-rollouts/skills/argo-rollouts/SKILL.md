@@ -5,7 +5,7 @@ license: MIT
 compatibility: Scripts are self-contained (PEP 723) and run via `uv run scripts/...` with zero install, or `python3 scripts/...` with PyYAML. Tests need pytest (see requirements.txt). Operates on Kubernetes clusters with the Argo Rollouts controller and the `kubectl argo rollouts` plugin.
 metadata:
   author: argo-rollouts-skill
-  version: "1.2.0" # x-release-please-version
+  version: "1.2.1" # x-release-please-version
   spec: agentskills.io
 allowed-tools: Bash(uv:*) Bash(python3:*) Bash(.venv/bin/python:*) Bash(kubectl:*) Bash(kubectl-argo-rollouts:*) Read Write Edit Glob Grep
 ---

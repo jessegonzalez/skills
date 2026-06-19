@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Going forward, [release-please](https://github.com/googleapis/release-please)
 maintains this file from Conventional Commits.
 
+## 1.2.1 (2026-06-19)
+
+## What's Changed
+* chore(release): sync manifest versions to 1.2.0 and adopt manifest-mode release-please by @jessegonzalez in https://github.com/jessegonzalez/skills/pull/10
+* ci(deps)(deps): bump actions/deploy-pages from 4 to 5 by @dependabot[bot] in https://github.com/jessegonzalez/skills/pull/7
+
+## New Contributors
+* @jessegonzalez made their first contribution in https://github.com/jessegonzalez/skills/pull/10
+
+**Full Changelog**: https://github.com/jessegonzalez/skills/compare/v1.2.0...v1.2.1
+
 ## [1.2.0](https://github.com/jessegonzalez/skills/compare/v1.1.0...v1.2.0) (2026-06-19)
 
 
