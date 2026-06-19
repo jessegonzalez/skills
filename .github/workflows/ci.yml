@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same PR/branch to save minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  # ─── Unit tests ──────────────────────────────────────────────────────────
+  test:
+    name: Test (pytest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/requirements.txt
+            **/scripts/*.py
+
+      - name: Run pytest
+        run: uv run --with pytest --with pyyaml python -m pytest argo-rollouts/tests -q
+
+  # ─── Lint ────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Run ruff
+        run: uvx ruff check argo-rollouts
+
+  # ─── Skill spec ──────────────────────────────────────────────────────────
+  skill-spec:
+    name: Skill spec (agentskills.io)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Validate SKILL.md against agentskills.io spec
+        run: |
+          python3 .github/scripts/validate_skill.py argo-rollouts/SKILL.md
+
+  # ─── Smoke (generator → validator) ──────────────────────────────────────
+  smoke:
+    name: Smoke (gen → validate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/scripts/*.py
+
+      - name: Generate + validate manifests
+        run: |
+          set -euo pipefail
+          uv run argo-rollouts/scripts/gen_rollout.py \
+            --name guestbook --image guestbook:v2 --replicas 4 \
+            --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
+            --traffic-routing istio \
+            --virtual-service guestbook-vsvc --routes primary \
+            --stable-service guestbook-stable --canary-service guestbook-canary \
+            --analysis-template success-rate --starting-step 2 > /tmp/r.yaml
+
+          uv run argo-rollouts/scripts/gen_analysis.py \
+            --name success-rate --provider prometheus \
+            --address http://prometheus:9090 \
+            --query 'sum(rate(http_requests_total[5m]))' \
+            --success 'result[0] >= 0.95' --failure-limit 3 --interval 5m > /tmp/a.yaml
+
+          uv run argo-rollouts/scripts/validate.py /tmp/r.yaml /tmp/a.yaml

@@ -1,0 +1,10 @@
+# GitHub issue templates config.
+# Docs: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository#configuring-the-template-chooser
+blank_issues_enabled: true
+contact_links:
+  - name: Argo Rollouts upstream docs
+    url: https://argo-rollouts.readthedocs.io
+    about: For questions about the Argo Rollouts controller itself (not this skill), please consult the official docs first.
+  - name: Argo Rollouts community Slack
+    url: https://argoproj.github.io/community/join-slack
+    about: Live Q&A with the upstream Argo community (channel #argo-rollouts).

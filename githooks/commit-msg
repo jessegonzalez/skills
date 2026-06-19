@@ -1,0 +1,91 @@
+#!/bin/sh
+# commit-msg hook — enforces Conventional Commits on the first line.
+#
+#   <type>(<optional scope>): <subject>
+#
+# With support for:
+#   * `!` after type/scope to flag a breaking change  (feat!: ...)
+#   * a `BREAKING CHANGE:` footer (separate footer line)
+#   * merge / revert / release commits (auto-allowed)
+#   * continued lines (everything from line 2 onward is free-form)
+#
+# POSIX sh — no bashisms. To bypass: `git commit --no-verify`.
+#
+# Refs:
+#   - https://www.conventionalcommits.org/en/v1.0.0/
+#   - https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit
+
+set -eu
+
+msg_file="$1"
+first_line=$(sed -n '1p' "$msg_file")
+
+# Allow merge commits, revert commits, and version-tag style releases.
+case "$first_line" in
+    "Merge "*|"Revert "*|"Release "*|release*|v[0-9]*)
+        exit 0
+        ;;
+esac
+
+# Allowed Conventional Commit types. Keep in sync with CONTRIBUTING.md.
+allowed_types="feat fix docs style refactor perf test build ci chore revert"
+
+# Pattern: type(scope)?(=scope-non-empty)? !? : <space> <non-empty subject>
+# Scope is optional; if present it is lowercase alnum + `-` / `/` / `,`.
+pattern='^([a-z]+)(\([a-z0-9._/-]+\))?(!)?: .+'
+
+if ! printf '%s' "$first_line" | grep -Eq "$pattern"; then
+    cat >&2 <<EOF
+❌ Commit message does not follow Conventional Commits.
+
+    First line: $first_line
+
+Expected format:
+    <type>(<scope>)!: <subject>
+
+Where:
+    <type>    one of: $(echo "$allowed_types" | tr ' ' ',' | sed 's/,/, /g')
+    <scope>   optional, lowercase (e.g. feat(rollout): ...)
+    !         optional, marks a breaking change
+    <subject> short imperative description (e.g. "add canary step generator")
+
+Examples:
+    feat(analysis): add datadog provider support
+    fix: correct stable-service selector patching
+    docs(references): expand traffic-routing examples
+    refactor(scripts): extract step-parsing into rollout_lib
+    chore: bump pytest to 8.x
+    feat!: drop python3.8 support  (BREAKING)
+
+Footer conventions:
+    BREAKING CHANGE: <description>   (separate footer line)
+    Closes #123                      (issue link)
+EOF
+    exit 1
+fi
+
+# Extract the type and verify it's in the allow-list.
+type=$(printf '%s' "$first_line" | sed -E 's/^([a-z]+).*/\1/')
+ok=0
+for t in $allowed_types; do
+    [ "$type" = "$t" ] && { ok=1; break; }
+done
+if [ "$ok" = "0" ]; then
+    cat >&2 <<EOF
+❌ Unknown Conventional Commit type: '$type'
+
+First line: $first_line
+
+Allowed types: $(echo "$allowed_types" | tr '\n' ' ')
+
+See: https://www.conventionalcommits.org/en/v1.0.0/
+EOF
+    exit 1
+fi
+
+# Discourage but don't fail on a few common smells (warn only).
+case "$first_line" in
+    *". "*) echo "⚠️  Heads up: subject contains a '.' mid-line — conventional commits usually skip the trailing period." >&2 ;;
+esac
+
+exit 0

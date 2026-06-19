@@ -1,0 +1,73 @@
+#!/bin/sh
+# pre-commit hook — runs from the repo root via `core.hooksPath = githooks`.
+#
+# Keeps the argo-rollouts skill clean by running, fail-fast:
+#   1. ruff lint on scripts + tests
+#   2. the pytest suite (fast: ~0.2s)
+#   3. the agentskills.io spec validator against SKILL.md
+#
+# All three are quiet on success and clear on failure. To bypass in an
+# emergency use `git commit --no-verify` (please don't on shared branches).
+#
+# POSIX sh — no bashisms, runs on macOS and Linux.
+
+set -eu
+
+# Resolve repo root: hooks run with CWD = repo root (since core.hooksPath is
+# relative to the repo root), but be defensive about it.
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+# Detect available tools. CI / fresh clones have uv; local dev may have a
+# .venv with ruff pre-installed. Either is fine; just be consistent.
+have_uv=0
+command -v uv >/dev/null 2>&1 && have_uv=1
+
+# ─── 1. ruff ────────────────────────────────────────────────────────────────
+if [ "$have_uv" = "1" ]; then
+    ruff_cmd="uvx ruff check argo-rollouts/scripts argo-rollouts/tests"
+else
+    if [ -x ".venv/bin/ruff" ]; then
+        ruff_cmd=".venv/bin/ruff check argo-rollouts/scripts argo-rollouts/tests"
+    else
+        ruff_cmd="ruff check argo-rollouts/scripts argo-rollouts/tests"
+    fi
+fi
+if ! $ruff_cmd >/tmp/precommit_ruff.log 2>&1; then
+    echo "❌ ruff check failed:" >&2
+    cat /tmp/precommit_ruff.log >&2
+    echo >&2
+    echo "  Fix with:  ruff check --fix argo-rollouts/scripts argo-rollouts/tests" >&2
+    exit 1
+fi
+
+# ─── 2. pytest ──────────────────────────────────────────────────────────────
+if [ "$have_uv" = "1" ]; then
+    py_cmd="uv run --with pytest --with pyyaml python -m pytest argo-rollouts/tests -q"
+else
+    if [ -x ".venv/bin/pytest" ]; then
+        py_cmd=".venv/bin/pytest argo-rollouts/tests -q"
+    else
+        py_cmd="python3 -m pytest argo-rollouts/tests -q"
+    fi
+fi
+if ! $py_cmd >/tmp/precommit_pytest.log 2>&1; then
+    echo "❌ pytest failed:" >&2
+    cat /tmp/precommit_pytest.log >&2
+    echo >&2
+    echo "  Re-run verbose:  $py_cmd -v" >&2
+    exit 1
+fi
+
+# ─── 3. agentskills.io spec check ───────────────────────────────────────────
+validator="$repo_root/.github/scripts/validate_skill.py"
+if ! python3 "$validator" "$repo_root/argo-rollouts/SKILL.md" >/tmp/precommit_spec.log 2>&1; then
+    echo "❌ agentskills.io spec validation failed:" >&2
+    cat /tmp/precommit_spec.log >&2
+    echo >&2
+    echo "  Re-run:  python3 $validator argo-rollouts/SKILL.md" >&2
+    exit 1
+fi
+
+# All green — stay quiet so commits feel snappy.
+exit 0
