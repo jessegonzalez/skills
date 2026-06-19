@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Going forward, [release-please](https://github.com/googleapis/release-please)
 maintains this file from Conventional Commits.
 
+## [1.2.0](https://github.com/jessegonzalez/skills/compare/v1.1.0...v1.2.0) (2026-06-19)
+
+
+### Features
+
+* **chart:** add argo-rollouts-skill Helm chart + CI lint job ([1e6597c](https://github.com/jessegonzalez/skills/commit/1e6597c1d90fe4bdb185c5a0298342d8c8b174b6))
+* **scripts:** AWS ALB traffic routing + ping-pong in generator; feature ALB in examples ([0997d4e](https://github.com/jessegonzalez/skills/commit/0997d4e50cf0e707f4ca1dcf2bc1530571878bb5))
+
 ## [Unreleased]
 
 ### Changed
