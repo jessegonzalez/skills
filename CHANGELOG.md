@@ -55,5 +55,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `README.md` — CLI reference.
 - `tests/` — 55 pytest tests across all three CLIs.
 
-[Unreleased]: https://github.com/YOUR-GITHUB-USERNAME/argo-rollouts/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/YOUR-GITHUB-USERNAME/argo-rollouts/releases/tag/v1.0.0
+[Unreleased]: https://github.com/jessegonzalez/argo-rollouts/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/jessegonzalez/argo-rollouts/releases/tag/v1.0.0

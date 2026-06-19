@@ -1,23 +1,20 @@
 # CODEOWNERS — https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 #
-# !!! TODO: replace the placeholder handle below with the real repo owner(s).
-#           GitHub will not require review until at least one real handle is present.
-#
 # Each line: <pattern> <@user or @team>...
 # The pattern matches paths in the repo; the owners get auto-requested on PRs
 # that touch those paths.
 
 # Default owner for everything in the repo.
-* @YOUR-GITHUB-USERNAME
+* @jessegonzalez
 
 # The skill itself — keep the spec honest.
-/argo-rollouts/SKILL.md        @YOUR-GITHUB-USERNAME
-/argo-rollouts/references/     @YOUR-GITHUB-USERNAME
+/argo-rollouts/SKILL.md        @jessegonzalez
+/argo-rollouts/references/     @jessegonzalez
 
 # Scripts + tests — these must keep CI green.
-/argo-rollouts/scripts/        @YOUR-GITHUB-USERNAME
-/argo-rollouts/tests/          @YOUR-GITHUB-USERNAME
+/argo-rollouts/scripts/        @jessegonzalez
+/argo-rollouts/tests/          @jessegonzalez
 
 # CI / hooks / spec validator — anyone changing the gates should be looped in.
-/.github/                      @YOUR-GITHUB-USERNAME
-/githooks/                     @YOUR-GITHUB-USERNAME
+/.github/                      @jessegonzalez
+/githooks/                     @jessegonzalez

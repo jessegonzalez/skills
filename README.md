@@ -1,6 +1,6 @@
 # argo-rollouts skill
 
-[![CI](https://github.com/YOUR-GITHUB-USERNAME/argo-rollouts/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR-GITHUB-USERNAME/argo-rollouts/actions/workflows/ci.yml)
+[![CI](https://github.com/jessegonzalez/argo-rollouts/actions/workflows/ci.yml/badge.svg)](https://github.com/jessegonzalez/argo-rollouts/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Spec: agentskills.io](https://img.shields.io/badge/spec-agentskills.io-8A2BE2)](https://agentskills.io/specification.md)
 
@@ -32,7 +32,7 @@ The repository distributes the skill. The skill itself lives in
 ## Install
 
 ```bash
-git clone https://github.com/YOUR-GITHUB-USERNAME/argo-rollouts.git
+git clone https://github.com/jessegonzalez/argo-rollouts.git
 # Then point your agent (Claude Code, etc.) at the skill directory:
 #   argo-rollouts/argo-rollouts/SKILL.md
 ```
