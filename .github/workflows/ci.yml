@@ -118,3 +118,26 @@ jobs:
             --success 'result[0] >= 0.95' --failure-limit 3 --interval 5m > /tmp/a.yaml
 
           uv run argo-rollouts/scripts/validate.py /tmp/r.yaml /tmp/a.yaml
+
+  # ─── Helm chart ───────────────────────────────────────────────────────────
+  helm:
+    name: Helm chart
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Lint + render all variants
+        run: |
+          set -euo pipefail
+          helm lint charts/argo-rollouts-skill
+          helm template ci charts/argo-rollouts-skill > /dev/null
+          helm template ci charts/argo-rollouts-skill --set strategy=bluegreen > /dev/null
+          helm template ci charts/argo-rollouts-skill \
+            --set canary.trafficRouting.enabled=true \
+            --set 'canary.trafficRouting.config.istio.virtualService.name=v' \
+            --set 'canary.trafficRouting.config.istio.virtualService.routes[0]=primary' \
+            --set analysis.enabled=true > /dev/null
