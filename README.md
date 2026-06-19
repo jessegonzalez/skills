@@ -31,13 +31,29 @@ The repository distributes the skill. The skill itself lives in
 
 ## Install
 
+**Option A — plugin marketplace (Claude Code):**
+
 ```bash
-git clone https://github.com/jessegonzalez/skills.git
-# Then point your agent (Claude Code, etc.) at the skill directory:
-#   argo-rollouts/argo-rollouts/SKILL.md
+claude plugin marketplace add jessegonzalez/skills
+claude plugin install argo-rollouts@jessegonzalez-skills
 ```
 
-That's it — there is nothing to `pip install`. The helper scripts declare
+…or, once GitHub Pages is live, from the hosted catalog URL:
+
+```bash
+claude plugin marketplace add https://jessegonzalez.github.io/skills/marketplace.json
+```
+
+**Option B — manual (any agent that loads `SKILL.md`):**
+
+```bash
+git clone https://github.com/jessegonzalez/skills.git
+# Point your agent at the skill: argo-rollouts/SKILL.md
+#   opencode: add the dir to `skills.paths` in opencode.json
+#   Claude Code: drop under ~/.claude/skills/
+```
+
+There is nothing to `pip install`. The helper scripts declare
 their dependencies inline (PEP 723) and run via `uv`.
 
 ## Enable the local git hooks (recommended)
