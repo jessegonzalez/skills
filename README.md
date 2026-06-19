@@ -10,20 +10,20 @@ format — that helps agents and humans **author, operate, and troubleshoot
 progressive-delivery controller.
 
 The repository distributes the skill. The skill itself lives in
-[`argo-rollouts/`](./argo-rollouts) and consists of:
+[`plugins/argo-rollouts/skills/argo-rollouts/`](./plugins/argo-rollouts/skills/argo-rollouts) and consists of:
 
-- **[`SKILL.md`](./argo-rollouts/SKILL.md)** — the orientation layer: the
+- **[`SKILL.md`](./plugins/argo-rollouts/skills/argo-rollouts/SKILL.md)** — the orientation layer: the
   reconciler mental model, the field map, and a routing table into the
   references.
-- **[`references/*.md`](./argo-rollouts/references)** — 12 deep-dive docs
+- **[`references/*.md`](./plugins/argo-rollouts/skills/argo-rollouts/references)** — 12 deep-dive docs
   (canary, blue-green, analysis, traffic routing, GitOps, troubleshooting…).
-- **[`scripts/`](./argo-rollouts/scripts)** — three PEP 723 self-contained
+- **[`scripts/`](./plugins/argo-rollouts/skills/argo-rollouts/scripts)** — three PEP 723 self-contained
   CLIs you run with [`uv`](https://docs.astral.sh/uv/) and zero install:
-  [`gen_rollout.py`](./argo-rollouts/scripts/gen_rollout.py),
-  [`gen_analysis.py`](./argo-rollouts/scripts/gen_analysis.py),
-  [`validate.py`](./argo-rollouts/scripts/validate.py). See
-  [`scripts/README.md`](./argo-rollouts/scripts/README.md).
-- **[`tests/`](./argo-rollouts/tests)** — 55 pytest tests covering all three
+  [`gen_rollout.py`](./plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py),
+  [`gen_analysis.py`](./plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_analysis.py),
+  [`validate.py`](./plugins/argo-rollouts/skills/argo-rollouts/scripts/validate.py). See
+  [`scripts/README.md`](./plugins/argo-rollouts/skills/argo-rollouts/scripts/README.md).
+- **[`tests/`](./plugins/argo-rollouts/skills/argo-rollouts/tests)** — 55 pytest tests covering all three
   CLIs.
 
 > **Field paths in this skill are verified against `argoproj.io/v1alpha1`.**
@@ -48,7 +48,7 @@ claude plugin marketplace add https://jessegonzalez.github.io/skills/marketplace
 
 ```bash
 git clone https://github.com/jessegonzalez/skills.git
-# Point your agent at the skill: argo-rollouts/SKILL.md
+# Point your agent at the skill: plugins/argo-rollouts/skills/argo-rollouts/SKILL.md
 #   opencode: add the dir to `skills.paths` in opencode.json
 #   Claude Code: drop under ~/.claude/skills/
 ```
@@ -75,7 +75,7 @@ instructions.
 
 ```bash
 # Generate a canary Rollout with Istio traffic routing + an AnalysisTemplate gate
-uv run argo-rollouts/scripts/gen_rollout.py \
+uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py \
   --name guestbook --image guestbook:v2 --replicas 4 \
   --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
   --traffic-routing istio \
@@ -84,30 +84,30 @@ uv run argo-rollouts/scripts/gen_rollout.py \
   --analysis-template success-rate --starting-step 2 > rollout.yaml
 
 # Generate the matching AnalysisTemplate (Prometheus success-rate)
-uv run argo-rollouts/scripts/gen_analysis.py \
+uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_analysis.py \
   --name success-rate --provider prometheus \
   --address http://prometheus:9090 \
   --query 'sum(rate(http_requests_total[5m]))' \
   --success 'result[0] >= 0.95' --failure-limit 3 --interval 5m > analysis.yaml
 
 # Validate before applying
-uv run argo-rollouts/scripts/validate.py rollout.yaml analysis.yaml
+uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/validate.py rollout.yaml analysis.yaml
 ```
 
 Every script has `--help`. The full CLI reference is in
-[`argo-rollouts/scripts/README.md`](./argo-rollouts/scripts/README.md).
+[`plugins/argo-rollouts/skills/argo-rollouts/scripts/README.md`](./plugins/argo-rollouts/skills/argo-rollouts/scripts/README.md).
 
 ## Develop
 
 ```bash
 # Tests (no venv required)
-cd argo-rollouts && uv run --with pytest --with pyyaml python -m pytest tests/ -q && cd ..
+cd plugins/argo-rollouts/skills/argo-rollouts && uv run --with pytest --with pyyaml python -m pytest tests/ -q && cd ..
 
 # Lint
-uvx ruff check argo-rollouts/scripts argo-rollouts/tests
+uvx ruff check plugins/argo-rollouts/skills/argo-rollouts/scripts plugins/argo-rollouts/skills/argo-rollouts/tests
 
 # Validate the skill against the agentskills.io spec
-python3 .github/scripts/validate_skill.py argo-rollouts/SKILL.md
+python3 .github/scripts/validate_skill.py plugins/argo-rollouts/skills/argo-rollouts/SKILL.md
 ```
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the full workflow, commit
@@ -121,7 +121,7 @@ jobs on every push to `main` and every PR against `main`:
 
 | Job          | What it checks                                           |
 |--------------|----------------------------------------------------------|
-| `test`       | `pytest argo-rollouts/tests` under Python 3.14 via `uv`. |
+| `test`       | `pytest plugins/argo-rollouts/skills/argo-rollouts/tests` under Python 3.14 via `uv`. |
 | `lint`       | `ruff check argo-rollouts`.                              |
 | `skill-spec` | `SKILL.md` conforms to the agentskills.io spec.          |
 | `smoke`      | The `gen_*` → `validate` pipeline produces valid output. |

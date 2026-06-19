@@ -8,12 +8,12 @@
 * @jessegonzalez
 
 # The skill itself — keep the spec honest.
-/argo-rollouts/SKILL.md        @jessegonzalez
-/argo-rollouts/references/     @jessegonzalez
+/plugins/argo-rollouts/skills/argo-rollouts/SKILL.md        @jessegonzalez
+/plugins/argo-rollouts/skills/argo-rollouts/references/     @jessegonzalez
 
 # Scripts + tests — these must keep CI green.
-/argo-rollouts/scripts/        @jessegonzalez
-/argo-rollouts/tests/          @jessegonzalez
+/plugins/argo-rollouts/skills/argo-rollouts/scripts/        @jessegonzalez
+/plugins/argo-rollouts/skills/argo-rollouts/tests/          @jessegonzalez
 
 # CI / hooks / spec validator — anyone changing the gates should be looped in.
 /.github/                      @jessegonzalez

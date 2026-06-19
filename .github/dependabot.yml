@@ -22,7 +22,7 @@ updates:
 
   # Python deps declared inline (PEP 723 scripts) and in requirements.txt.
   - package-ecosystem: pip
-    directory: /argo-rollouts
+    directory: /plugins/argo-rollouts/skills/argo-rollouts
     schedule:
       interval: monthly
       day: monday

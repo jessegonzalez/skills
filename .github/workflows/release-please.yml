@@ -27,4 +27,4 @@ jobs:
           changelog-type: github
           extra-files: |
             .claude-plugin/marketplace.json
-            argo-rollouts/SKILL.md
+            plugins/argo-rollouts/skills/argo-rollouts/SKILL.md

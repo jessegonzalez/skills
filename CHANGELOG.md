@@ -9,7 +9,16 @@ maintains this file from Conventional Commits.
 
 ## [Unreleased]
 
-_No unreleased changes._
+### Changed
+- **Restructured into the plugin-bundled marketplace layout** (per the
+  [plugin-marketplaces](https://code.claude.com/docs/en/plugin-marketplaces.md)
+  spec). The skill moved from `argo-rollouts/` to
+  `plugins/argo-rollouts/skills/argo-rollouts/`, gained a plugin manifest at
+  `plugins/argo-rollouts/.claude-plugin/plugin.json`, and `.claude-plugin/marketplace.json`
+  now resolves the plugin via `metadata.pluginRoot: "./plugins"` + `source: "argo-rollouts"`
+  (conventional `skills/<name>/` auto-load; `strict` defaults to true with `plugin.json`
+  as authority). All path references in CI, hooks, docs, the spec validator, the eval
+  harness, CODEOWNERS, and Dependabot were updated.
 
 ## [1.1.0] - 2026-06-19
 

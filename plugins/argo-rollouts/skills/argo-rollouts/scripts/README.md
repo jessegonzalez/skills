@@ -14,9 +14,9 @@ API in `rollout_lib.py` for embedding in other tools.
 ## Setup
 
 ```bash
-pip install -r argo-rollouts/requirements.txt   # just PyYAML >= 6.0
+pip install -r plugins/argo-rollouts/skills/argo-rollouts/requirements.txt   # just PyYAML >= 6.0
 # or use the bundled venv:
-.venv/bin/python argo-rollouts/scripts/gen_rollout.py --help
+.venv/bin/python plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py --help
 ```
 
 ## Python API
@@ -92,7 +92,7 @@ instead of dashes — `traffic_routing` not `traffic-routing`).
 **Canary + AWS ALB traffic routing + ping-pong + Prometheus gate** (matches SKILL.md):
 
 ```bash
-.venv/bin/python argo-rollouts/scripts/gen_rollout.py \
+.venv/bin/python plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py \
   --name guestbook --image guestbook:v2 --replicas 4 --port 8080 \
   --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
   --traffic-routing alb --ingress guestbook-ingress --service-port 443 \
@@ -105,7 +105,7 @@ instead of dashes — `traffic_routing` not `traffic-routing`).
 **Blue-green with a manual gate** (matches SKILL.md):
 
 ```bash
-.venv/bin/python argo-rollouts/scripts/gen_rollout.py \
+.venv/bin/python plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py \
   --name my-app --image my-app:v1 --strategy bluegreen --replicas 3 \
   --active-service my-app-active --preview-service my-app-preview --manual-gate
 ```
@@ -113,7 +113,7 @@ instead of dashes — `traffic_routing` not `traffic-routing`).
 **Basic rolling-update canary** (no steps, pod-ratio only):
 
 ```bash
-.venv/bin/python argo-rollouts/scripts/gen_rollout.py \
+.venv/bin/python plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py \
   --name api --image api:v3 --replicas 6 --max-surge 25% --max-unavailable 0
 ```
 
@@ -150,7 +150,7 @@ instead of dashes — `traffic_routing` not `traffic-routing`).
 ### Example
 
 ```bash
-.venv/bin/python argo-rollouts/scripts/gen_analysis.py \
+.venv/bin/python plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_analysis.py \
   --name success-rate --provider prometheus \
   --address http://prometheus:9090 \
   --query 'sum(rate(http_requests_total{status!~"5.."}[5m]))/sum(rate(http_requests_total[5m]))' \
@@ -165,7 +165,7 @@ instead of dashes — `traffic_routing` not `traffic-routing`).
 ### Usage
 
 ```bash
-.venv/bin/python argo-rollouts/scripts/validate.py FILE [FILE ...]
+.venv/bin/python plugins/argo-rollouts/skills/argo-rollouts/scripts/validate.py FILE [FILE ...]
 ```
 
 Loads each YAML file (multi-doc safe), dispatches by `kind`, prints errors to
@@ -194,7 +194,7 @@ metric has a `name`; each metric has a `provider`.
 ### Example
 
 ```bash
-.venv/bin/python argo-rollouts/scripts/validate.py rollout.yaml analysis.yaml
+.venv/bin/python plugins/argo-rollouts/skills/argo-rollouts/scripts/validate.py rollout.yaml analysis.yaml
 ```
 
 ---
@@ -202,6 +202,6 @@ metric has a `name`; each metric has a `provider`.
 ## Running the tests
 
 ```bash
-.venv/bin/python -m pytest argo-rollouts/tests/ -v
-.venv/bin/ruff check argo-rollouts/scripts/ argo-rollouts/tests/
+.venv/bin/python -m pytest plugins/argo-rollouts/skills/argo-rollouts/tests/ -v
+.venv/bin/ruff check plugins/argo-rollouts/skills/argo-rollouts/scripts/ plugins/argo-rollouts/skills/argo-rollouts/tests/
 ```

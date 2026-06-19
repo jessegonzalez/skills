@@ -3,12 +3,11 @@
   "name": "jessegonzalez-skills",
   "owner": { "name": "Jesse Gonzalez" },
   "description": "Agent skills (agentskills.io) for Kubernetes progressive delivery with Argo Rollouts.",
+  "metadata": { "pluginRoot": "./plugins" },
   "plugins": [
     {
       "name": "argo-rollouts",
-      "source": "./",
-      "strict": false,
-      "skills": ["./argo-rollouts"],
+      "source": "argo-rollouts",
       "description": "Author, operate, and troubleshoot Argo Rollouts: canary and blue-green strategies, AnalysisTemplate metric gates, traffic routing (AWS ALB ping-pong, NGINX, SMI, Istio), the kubectl argo rollouts plugin, GitOps with Argo CD, plus PEP 723 self-contained manifest generators.",
       "version": "1.1.0",
       "author": { "name": "Jesse Gonzalez" },

@@ -18,6 +18,9 @@ set -eu
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
 
+# Skill directory (plugin-bundled layout per the plugin-marketplaces spec).
+skill="plugins/argo-rollouts/skills/argo-rollouts"
+
 # Detect available tools. CI / fresh clones have uv; local dev may have a
 # .venv with ruff pre-installed. Either is fine; just be consistent.
 have_uv=0
@@ -25,30 +28,30 @@ command -v uv >/dev/null 2>&1 && have_uv=1
 
 # ─── 1. ruff ────────────────────────────────────────────────────────────────
 if [ "$have_uv" = "1" ]; then
-    ruff_cmd="uvx ruff check argo-rollouts/scripts argo-rollouts/tests"
+    ruff_cmd="uvx ruff check $skill/scripts $skill/tests"
 else
     if [ -x ".venv/bin/ruff" ]; then
-        ruff_cmd=".venv/bin/ruff check argo-rollouts/scripts argo-rollouts/tests"
+        ruff_cmd=".venv/bin/ruff check $skill/scripts $skill/tests"
     else
-        ruff_cmd="ruff check argo-rollouts/scripts argo-rollouts/tests"
+        ruff_cmd="ruff check $skill/scripts $skill/tests"
     fi
 fi
 if ! $ruff_cmd >/tmp/precommit_ruff.log 2>&1; then
     echo "❌ ruff check failed:" >&2
     cat /tmp/precommit_ruff.log >&2
     echo >&2
-    echo "  Fix with:  ruff check --fix argo-rollouts/scripts argo-rollouts/tests" >&2
+    echo "  Fix with:  ruff check --fix $skill/scripts $skill/tests" >&2
     exit 1
 fi
 
 # ─── 2. pytest ──────────────────────────────────────────────────────────────
 if [ "$have_uv" = "1" ]; then
-    py_cmd="uv run --with pytest --with pyyaml python -m pytest argo-rollouts/tests -q"
+    py_cmd="uv run --with pytest --with pyyaml python -m pytest $skill/tests -q"
 else
     if [ -x ".venv/bin/pytest" ]; then
-        py_cmd=".venv/bin/pytest argo-rollouts/tests -q"
+        py_cmd=".venv/bin/pytest $skill/tests -q"
     else
-        py_cmd="python3 -m pytest argo-rollouts/tests -q"
+        py_cmd="python3 -m pytest $skill/tests -q"
     fi
 fi
 if ! $py_cmd >/tmp/precommit_pytest.log 2>&1; then
@@ -61,11 +64,11 @@ fi
 
 # ─── 3. agentskills.io spec check ───────────────────────────────────────────
 validator="$repo_root/.github/scripts/validate_skill.py"
-if ! python3 "$validator" "$repo_root/argo-rollouts/SKILL.md" >/tmp/precommit_spec.log 2>&1; then
+if ! python3 "$validator" "$repo_root/$skill/SKILL.md" >/tmp/precommit_spec.log 2>&1; then
     echo "❌ agentskills.io spec validation failed:" >&2
     cat /tmp/precommit_spec.log >&2
     echo >&2
-    echo "  Re-run:  python3 $validator argo-rollouts/SKILL.md" >&2
+    echo "  Re-run:  python3 $validator $skill/SKILL.md" >&2
     exit 1
 fi
 

@@ -4,7 +4,7 @@ Validate an agentskills.io skill against the specification.
 
 Usage:
     python validate_skill.py PATH/TO/SKILL.md
-    python validate_skill.py             # validates argo-rollouts/SKILL.md by default
+    python validate_skill.py             # validates the bundled SKILL.md by default
 
 Checks (per https://agentskills.io/specification.md):
   * File uses YAML frontmatter delimited by `---` lines.
@@ -214,8 +214,11 @@ def main(argv: list[str]) -> int:
     if len(argv) > 1:
         skill_path = Path(argv[1])
     else:
-        # Default: <repo-root>/argo-rollouts/SKILL.md
-        skill_path = Path(__file__).resolve().parents[2] / "argo-rollouts" / "SKILL.md"
+        # Default: <repo-root>/plugins/argo-rollouts/skills/argo-rollouts/SKILL.md
+        skill_path = (
+            Path(__file__).resolve().parents[2]
+            / "plugins" / "argo-rollouts" / "skills" / "argo-rollouts" / "SKILL.md"
+        )
 
     violations = validate(skill_path)
     if not violations:

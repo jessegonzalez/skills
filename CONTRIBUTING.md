@@ -1,7 +1,7 @@
 # Contributing
 
 Thanks for helping improve the argo-rollouts skill! This is a short, opinionated
-guide. The skill itself (under [`argo-rollouts/`](./argo-rollouts)) is the
+guide. The skill itself (under [`plugins/argo-rollouts/skills/argo-rollouts/`](./plugins/argo-rollouts/skills/argo-rollouts)) is the
 deliverable; everything else in this repo exists to keep it trustworthy.
 
 ## TL;DR
@@ -42,8 +42,8 @@ They're all enforced by CI but please internalise them:
    `skill-spec` CI job and the `pre-commit` hook both check this.
 
 2. **New scripts need tests.** Every CLI behaviour change in
-   `argo-rollouts/scripts/` ships with new or updated tests in
-   `argo-rollouts/tests/`. CI fails without it (the test count is currently
+   `plugins/argo-rollouts/skills/argo-rollouts/scripts/` ships with new or updated tests in
+   `plugins/argo-rollouts/skills/argo-rollouts/tests/`. CI fails without it (the test count is currently
    55 — your change should bump it).
 
 3. **New references must be linked from `SKILL.md`.** A reference doc that
@@ -102,19 +102,19 @@ Before pushing, run the four canonical commands from the repo root (also in
 the PR template):
 
 ```bash
-cd argo-rollouts && uv run --with pytest --with pyyaml python -m pytest tests/ -q && cd ..
-uvx ruff check argo-rollouts/scripts argo-rollouts/tests
-python3 .github/scripts/validate_skill.py argo-rollouts/SKILL.md
+cd plugins/argo-rollouts/skills/argo-rollouts && uv run --with pytest --with pyyaml python -m pytest tests/ -q && cd ..
+uvx ruff check plugins/argo-rollouts/skills/argo-rollouts/scripts plugins/argo-rollouts/skills/argo-rollouts/tests
+python3 .github/scripts/validate_skill.py plugins/argo-rollouts/skills/argo-rollouts/SKILL.md
 # smoke:
-uv run argo-rollouts/scripts/gen_rollout.py --name guestbook --image guestbook:v2 \
+uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py --name guestbook --image guestbook:v2 \
   --replicas 4 --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
   --traffic-routing istio --virtual-service guestbook-vsvc --routes primary \
   --stable-service guestbook-stable --canary-service guestbook-canary \
   --analysis-template success-rate --starting-step 2 > /tmp/r.yaml
-uv run argo-rollouts/scripts/gen_analysis.py --name success-rate --provider prometheus \
+uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_analysis.py --name success-rate --provider prometheus \
   --address http://prometheus:9090 --query 'sum(rate(http_requests_total[5m]))' \
   --success 'result[0] >= 0.95' --failure-limit 3 --interval 5m > /tmp/a.yaml
-uv run argo-rollouts/scripts/validate.py /tmp/r.yaml /tmp/a.yaml
+uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/validate.py /tmp/r.yaml /tmp/a.yaml
 ```
 
 ## Hooks

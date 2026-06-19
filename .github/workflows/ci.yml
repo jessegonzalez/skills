@@ -37,7 +37,7 @@ jobs:
             **/scripts/*.py
 
       - name: Run pytest
-        run: uv run --with pytest --with pyyaml python -m pytest argo-rollouts/tests -q
+        run: uv run --with pytest --with pyyaml python -m pytest plugins/argo-rollouts/skills/argo-rollouts/tests -q
 
   # ─── Lint ────────────────────────────────────────────────────────────────
   lint:
@@ -61,7 +61,7 @@ jobs:
             **/scripts/*.py
 
       - name: Run ruff
-        run: uvx ruff check argo-rollouts
+        run: uvx ruff check plugins/argo-rollouts/skills/argo-rollouts
 
   # ─── Skill spec ──────────────────────────────────────────────────────────
   skill-spec:
@@ -78,7 +78,7 @@ jobs:
 
       - name: Validate SKILL.md against agentskills.io spec
         run: |
-          python3 .github/scripts/validate_skill.py argo-rollouts/SKILL.md
+          python3 .github/scripts/validate_skill.py plugins/argo-rollouts/skills/argo-rollouts/SKILL.md
 
   # ─── Smoke (generator → validator) ──────────────────────────────────────
   smoke:
@@ -103,7 +103,7 @@ jobs:
       - name: Generate + validate manifests
         run: |
           set -euo pipefail
-          uv run argo-rollouts/scripts/gen_rollout.py \
+          uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_rollout.py \
             --name guestbook --image guestbook:v2 --replicas 4 \
             --strategy canary --steps "20 5m,40 5m,60 5m,80 5m" \
             --traffic-routing alb --ingress guestbook-ingress --service-port 443 \
@@ -111,10 +111,10 @@ jobs:
             --stable-service guestbook-stable --canary-service guestbook-canary \
             --analysis-template success-rate --starting-step 2 > /tmp/r.yaml
 
-          uv run argo-rollouts/scripts/gen_analysis.py \
+          uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/gen_analysis.py \
             --name success-rate --provider prometheus \
             --address http://prometheus:9090 \
             --query 'sum(rate(http_requests_total[5m]))' \
             --success 'result[0] >= 0.95' --failure-limit 3 --interval 5m > /tmp/a.yaml
 
-          uv run argo-rollouts/scripts/validate.py /tmp/r.yaml /tmp/a.yaml
+          uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/validate.py /tmp/r.yaml /tmp/a.yaml
