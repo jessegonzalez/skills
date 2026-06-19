@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Going forward, [release-please](https://github.com/googleapis/release-please)
 maintains this file from Conventional Commits.
 
+> **Note:** As of v1.2.0, release-please runs in **per-plugin** mode. New
+> release entries for each plugin live in `plugins/<plugin>/CHANGELOG.md`.
+> This root file is the historical record through v1.2.0.
+
 ## [1.2.0](https://github.com/jessegonzalez/skills/compare/v1.1.0...v1.2.0) (2026-06-19)
 
 
