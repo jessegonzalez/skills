@@ -21,15 +21,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python 3.14
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.14"
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
           cache-dependency-glob: |
@@ -45,15 +45,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python 3.14
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.14"
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
           cache-dependency-glob: |
@@ -69,10 +69,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python 3.14
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.14"
 
@@ -86,15 +86,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python 3.14
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.14"
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
           cache-dependency-glob: |
