@@ -127,10 +127,13 @@ the commit-message check on every commit. See
 
 ## Releases
 
-We follow [Keep a Changelog](https://keepachangelog.com/) and
-[Semantic Versioning](https://semver.org/). New work goes under
-`[Unreleased]` in [`CHANGELOG.md`](./CHANGELOG.md) and is moved to a
-versioned heading on release.
+Releases are cut per-plugin by
+[release-please](https://github.com/googleapis/release-please) from
+Conventional Commits. For each plugin, release-please opens a release pull
+request; a maintainer reviews and merges it, which cuts a component tag
+(`argo-rollouts-v<x.y.z>`) and appends an entry to that plugin's
+`CHANGELOG.md` (`plugins/<plugin>/CHANGELOG.md`). There is no repo-root
+changelog.
 
 ## Licence
 
