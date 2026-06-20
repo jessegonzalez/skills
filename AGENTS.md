@@ -24,6 +24,12 @@ plugins/<plugin>/
 githooks/                              # tracked hooks (core.hooksPath = githooks)
 .github/                               # CI, templates, dependabot, validate_skill.py
 
+# Reference examples for OTHER tools (NOT Claude Code plugins — intentionally
+# absent from marketplace.json / release-please). plugins/litellm/ is an opencode
+# custom-provider + apiKeyHelper plugin; it ships its own package.json/tsconfig/
+# bun:test suite (CI "Plugin" job).
+plugins/litellm/
+
 Repo meta: README.md, CONTRIBUTING.md, CHANGELOG.md, LICENSE (MIT), SECURITY.md, TODO.md.
 
 ## The golden rule — documentation travels with the change
