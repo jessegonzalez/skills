@@ -30,7 +30,7 @@ githooks/                              # tracked hooks (core.hooksPath = githook
 # bun:test suite (CI "Plugin" job).
 plugins/litellm/
 
-Repo meta: README.md, CONTRIBUTING.md, CHANGELOG.md, LICENSE (MIT), SECURITY.md, TODO.md.
+Repo meta: README.md, CONTRIBUTING.md, LICENSE (MIT), SECURITY.md.
 
 ## The golden rule — documentation travels with the change
 
