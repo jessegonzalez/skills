@@ -55,6 +55,11 @@ ENV/
 .python-version
 
 # ─────────────────────────────────────────────────────────────
+# Node.js (opencode plugin examples under plugins/litellm/)
+# ─────────────────────────────────────────────────────────────
+node_modules/
+
+# ─────────────────────────────────────────────────────────────
 # Local-only / scratch (do NOT distribute)
 # ─────────────────────────────────────────────────────────────
 # Earlier skill drafts kept for reference; never shipped.

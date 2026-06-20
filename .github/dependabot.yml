@@ -35,3 +35,19 @@ updates:
     labels:
       - dependencies
       - python
+
+  # Node.js devDeps for the opencode plugin example (plugins/litellm/).
+  - package-ecosystem: npm
+    directory: /plugins/litellm
+    schedule:
+      interval: monthly
+      day: monday
+      time: "06:00"
+      timezone: America/Los_Angeles
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "build(deps)"
+      include: scope
+    labels:
+      - dependencies
+      - javascript

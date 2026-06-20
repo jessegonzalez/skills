@@ -118,3 +118,26 @@ jobs:
             --success 'result[0] >= 0.95' --failure-limit 3 --interval 5m > /tmp/a.yaml
 
           uv run plugins/argo-rollouts/skills/argo-rollouts/scripts/validate.py /tmp/r.yaml /tmp/a.yaml
+
+  # ─── opencode plugin (litellm apiKeyHelper) ─────────────────────────────
+  plugin:
+    name: Plugin (bun test + typecheck)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: plugins/litellm
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun test
