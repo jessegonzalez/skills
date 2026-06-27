@@ -12,6 +12,16 @@
         "skills/argo-rollouts/SKILL.md",
         "README.md"
       ]
+    },
+    "plugins/litellm": {
+      "component": "litellm",
+      "include-component-in-tag": true,
+      "release-type": "node",
+      "package-name": "litellm-auth-helper",
+      "changelog-type": "github",
+      "extra-files": [
+        "README.md"
+      ]
     }
   }
 }
