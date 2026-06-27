@@ -1,6 +1,6 @@
 # litellm
 
-**Version:** v1.0.0 <!-- x-release-please-version -->
+**Version:** v1.0.1 <!-- x-release-please-version -->
 
 > An opencode custom model provider that fronts a [LiteLLM](https://github.com/BerriAI/litellm) (or any OpenAI-compatible) proxy, plus a generic auth-token helper plugin for short-lived credentials.
 

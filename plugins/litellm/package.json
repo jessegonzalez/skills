@@ -1,6 +1,6 @@
 {
   "name": "litellm-auth-helper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "opencode apiKeyHelper plugin (reference example). Injects a short-lived token from a shell command into each LLM request.",
   "type": "module",
